@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital-агентство Цунами</title>
+  <style>
+    header{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+	    width: 100%;
+      background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(9,121,92,1) 50%, rgba(0,212,255,1) 100%);     
+	    height: 100px;
+    }
+
+    .dropdown {
+      padding-left: 20px; 
+    }
+
+    .dropdown a:hover {background-color: #050505;}
+
+    .menuButton {     
+      position: relative;
+      border: none;
+      background: transparent;
+      width: 40px;
+      height: 26px;
+    }
+
+    .menuButton::before,
+    .menuButton::after {
+      content: '';
+      left: 0;
+      position: absolute;
+      width: 100%;
+      height: 4px;
+      border-radius: 10px;
+      background: #000;
+    }
+
+    .menuButton::before {
+      top: 0;
+      box-shadow: 0 11px 0 #000;
+    }
+
+    .menuButton::after {
+      bottom: 0;
+    }
+
+    .menuButton::before {
+      transition: box-shadow .3s .15s, top .3s .15s, transform .3s;
+    }
+
+    .menuButton::after {
+      transition: bottom .3s .15s, transform .3s;
+    }
+
+    .menuButton.active::before {
+      top: 11px;
+      transform: rotate(45deg);
+      box-shadow: 0 6px 0 rgba(0,0,0,0);
+      transition: box-shadow .15s, top .3s, transform .3s .15s;
+    }
+
+    .menuButton.active::after {
+      bottom: 11px;
+      transform: rotate(-45deg);
+      transition: bottom .3s, transform .3s .15s;
+    }
+
+    .dropdown-content {
+      position: absolute;
+      top: 100px;     
+      overflow: auto;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);     
+      visibility: hidden;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all .5s ease;
+      background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(9,79,121,1) 50%, rgb(14 176 209) 100%);
+    }
+
+    .dropdown-content a {
+      color: #ffffff;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 20px;
+      -webkit-text-stroke: 0.2px #000000;
+    }
+
+    .show {
+      visibility: visible;
+      transform: translateY(0);
+      opacity: 1;    
+    }
+
+    .logo{
+      padding-top: 20px;
+    }
+
+    .phone {
+      padding-right: 20px;
+      font-size: 30px;
+      font-weight: bold;
+      color: rgb(0, 0, 0);
+      -webkit-text-stroke: 0.3px #2385df;
+    }
+
+    @media (max-width: 740px) {      
+      .dropdown-content a {        
+        padding: 10px 10px;
+      }
+    }
+
+    @media (max-width: 690px) {      
+      .dropdown-content a {
+        font-size: 15px;
+      }
+    }  
+
+    @media (max-width: 550px) {      
+      .dropdown-content a {
+        font-size: 10px;
+      }
+
+      .phone {
+        font-size: 20px;
+      }
+    }
+
+    @media (max-width: 440px) {
+      .phone {
+        font-size: 15px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      header {
+        height: 150px;
+        display:block;
+        padding-top: 20px;
+        text-align: center;
+      }
+
+      .dropdown {
+        padding-left: 0px; 
+      }  
+
+      .dropdown-content {
+        max-width: 95%;
+        top: 150px;
+      }
+
+      .dropdown-content a {        
+        padding: 5px 5px;
+      }   
+
+      .phone {
+        font-size: 20px;
+        padding-right: 0px;
+      }                
+    }
+
+    @media (max-width: 350px) {
+      .dropdown-content a {        
+        padding: 3px 3px;
+        font-size: 9px;
+      }   
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="dropdown">
+      <button class="menuButton"></button>
+        <div id="myDropdown" class="dropdown-content"></div>
+      </div>    
+    <div class="logo">
+      <a href="Test work.html"><img src="logo.svg" alt="Digital-агентство Цунами"></a>
+    </div>   
+    <div class="phone">8 (800) 300-85-37</div>                    
+  </header>
+
+  <script>
+    // Обработчик нажатия на кнопку меню
+    document.querySelector('.menuButton').addEventListener('click', function() {
+      this.classList.toggle('active');
+      var dropdownContent = this.nextElementSibling;
+      dropdownContent.classList.toggle('show');
+    });
+
+    // Получаем данные для выпадающего меню из JSON
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then(response => response.json())
+      .then(data => {
+        // Создаем таблицу для отображения данных
+        const table = document.createElement('table');
+        
+        // Заполняем таблицу данными
+        for (let i = 0; i < data.length; i += 3) {
+          // Создаем столбец для каждой строки
+          const column = document.createElement('td');
+          
+          // Заполняем все три ячейки столбца данными
+          for (let j = i; j < i + 3 && j < data.length; j++) {
+            // Данные пользователя
+            const user = data[j];
+
+            // Создаём ячейку
+            const cell = document.createElement('tr');
+
+            // Создаём элемент-ссылку
+            const link = document.createElement('a');
+
+            // Помещаем в ссылку имя пользователя и его ID
+            link.textContent = user.username;
+            link.href = `user.html?id=${user.id}`;
+
+            // Добавляем ссылку в ячейку, а ячейку в столбец
+            cell.appendChild(link);
+            column.appendChild(cell);
+          }
+          
+          // Добавляем столбец в таблицу
+          table.appendChild(column);
+        }
+
+        // Добавляем таблицу в выпадающее меню
+        const dropdownContent = document.getElementById('myDropdown');
+        dropdownContent.appendChild(table);               
+      })       
+  </script>
+</body>
+</html>
